@@ -3,6 +3,7 @@ import re
 import sys
 import logging
 import flatdict
+import collections
 logger = logging.getLogger(__name__)
 
 def resolve_yamls(yaml_templates):
@@ -39,10 +40,13 @@ def _resolve_key_substition(flattened, keys_to_resolve):
 def _merge_dicts(dicts):
     result = {}
     for dictionary in dicts:
-        result.update(dictionary)
+        _merge_dict(result, dictionary)
     return result
 
-# def _is_list_or_dict(val):
-#     if val == None:
-#         return False
-#     return type(val) == dict or type(val) == list
+def _merge_dict(dct, merge_dct):
+    for k, v in merge_dct.items():
+        if (k in dct and isinstance(dct[k], dict)
+                and isinstance(merge_dct[k], collections.Mapping)):
+            _merge_dict(dct[k], merge_dct[k])
+        else:
+            dct[k] = merge_dct[k]

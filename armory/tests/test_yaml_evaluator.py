@@ -25,12 +25,21 @@ class TestYaml(unittest.TestCase):
         spinnaker_yaml = self._open_fixture("spinnaker.yml")
 
         environ = os.environ.copy()
-        environ["SPINNAKER_AWS_ENABLED"] = "is_enabled"
+        environ["SPINNAKER_AWS_ENABLED"] = "true"
         environ["DEFAULT_DNS_NAME"] = "mockdns.com"
         environ["REDIS_HOST"] = "redishost.com"
 
+        #order matters here
         result = resolver.resolve_yamls(
                     [armory_yaml, local_yaml, spinnaker_yaml, environ]
                 )
+
         logger.info(result)
-        self.assertEquals(result["providers.aws.enabled"], "is_enabled1")
+        self.assertEquals(result["services.rosco.host"], "mockdns.com")
+        self.assertEquals(result["providers.google.enabled"], "false")
+        #default when no ENV var is present
+        self.assertEquals(result["providers.aws.defaultRegion"], "us-west-2")
+        #more complex substitution with urls
+        self.assertEquals(result["services.fiat.baseUrl"], "http://mockdns.com:7003")
+        #empty url
+        self.assertEquals(result["providers.google.primaryCredentials.project"], "")

@@ -3,7 +3,7 @@ set -e
 cd "$(dirname "$0")"/..
 
 set -x
-docker run -i -t --rm \
+docker run --rm \
     -v "$(pwd)/armory:/src/armory" \
     --workdir=/src \
     ${DOCKER_IMAGE} \

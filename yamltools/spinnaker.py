@@ -7,37 +7,34 @@ import glob
 import yaml
 from collections import OrderedDict
 
-def _order_path():
-    pass
-
 def settings(spinnaker_opt_dir="/opt/spinnaker/",spring_profiles_active="local"):
     #make some assumptions about the environment
-    spkr_opt_dir = os.environ.get("SPINNAKER_OPT_DIR", spinnaker_opt_dir)
+    spkr_opt_dir = os.environ.get(
+                        "SPINNAKER_OPT_DIR",
+                        spinnaker_opt_dir)
     spring_profiles_active = os.environ.get(
-                                "SPRING_PROFILES_ACTIVE",
-                                spring_profiles_active)
+                        "SPRING_PROFILES_ACTIVE",
+                        spring_profiles_active)
+    spkr_conf_dir = "%s/config" % spkr_opt_dir
+    #order them the right way so we overwrite properties properly
+    spring_profiles = reversed(spring_profiles_active.split(","))
+    #remove extra spaces if any
+    profiles_clean = map(lambda p: p.strip(), spring_profiles)
+    profile_suffixes = list(map(lambda ps: "-%s" % ps, profiles_clean))
+    #we need to add the default profiles, i.e spinnaker.yml
+    profile_suffixes.append("")
+    active_yaml_filenames = map(
+                        lambda p: "%s/spinnaker%s.yml" % (spkr_conf_dir, p),
+                        profile_suffixes)
 
-    active_profiles = reversed(spring_profiles_active.split(","))
-    ordered_files = OrderedDict()
-    for profile in active_profiles:
-        ordered_yaml_paths = glob.glob("%s/*-%s.yml" % (spkr_opt_dir, profile))
-        for yaml_path in ordered_yaml_paths:
-            ordered_files[yaml_path]: open(yaml_path).read()
-
-    paths = OrderedDict()
-
-    return {
-        'providers.aws.primaryCredentials.name': 'default-aws-account',
-        'providers.aws.defaultIAMRole': 'SpinnakerInstanceProfile',
-        'providers.aws.defaultKeyPairTemplate': 'armory-spinnaker-keypair',
-        'providers.aws.defaultRegion': 'us-west-2'
-    }
+    yaml_content = map(lambda f: open(f).read(), active_yaml_filenames)
+    loaded_yaml = map(yaml.load, yaml_content)
+    resolved_settings = resolver.resolve_yamls(list(loaded_yaml))
+    return resolved_settings
 
 def configure_main():
     settings_file = sys.argv[0]
     yaml_templates = sys.argv[1:]
-    print(settings_file)
-    print(yaml_templates)
 
 def __main__():
     configure_main()

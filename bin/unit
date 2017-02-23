@@ -3,8 +3,13 @@ set -e
 cd "$(dirname "$0")"/..
 
 set -x
-docker run --rm \
+
+if [[ ${DEBUGGER} ]]; then
+  INTERACTIVE="-i -t"
+  PDB="--pdb -s"
+fi
+docker run ${INTERACTIVE} --rm \
     -v "$(pwd)/yamltools:/src/yamltools" \
     --workdir=/src \
     ${DOCKER_IMAGE} \
-    nosetests -v --exclude="integration" ${@:2}
+    nosetests -v --exclude="integration" ${PDB} ${@:2}

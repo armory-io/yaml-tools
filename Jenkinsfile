@@ -5,7 +5,8 @@ node {
         //sh("arm unit")
     }
     stage("Promote Artifact") {
-      sh('env')
-      sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@<REPO> --tags')
+      withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'armory-jenkins', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
+        sh("arm release")
+      }
     }
 }

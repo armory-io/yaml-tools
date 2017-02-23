@@ -5,6 +5,7 @@ node {
         sh("arm unit")
     }
     stage("Promote Artifact") {
-        sh("arm release")
+      sh('env')
+      sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@<REPO> --tags')
     }
 }

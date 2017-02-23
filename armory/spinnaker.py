@@ -3,7 +3,7 @@ from armory.yaml import resolver
 import sys
 
 
-def default_settings():
+def settings():
     return {
         'providers.aws.primaryCredentials.name': 'default-aws-account',
         'providers.aws.defaultIAMRole': 'SpinnakerInstanceProfile',

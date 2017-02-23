@@ -35,6 +35,7 @@ class TestYaml(unittest.TestCase):
                 )
 
         logger.info(result)
+        #simple replace
         self.assertEquals(result["services.rosco.host"], "mockdns.com")
         self.assertEquals(result["providers.google.enabled"], "false")
         #default when no ENV var is present

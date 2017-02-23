@@ -3,7 +3,7 @@ import os
 import logging
 import yaml
 from flatdict import FlatDict
-from armory.yaml import resolver
+from yamltools import resolver
 
 logger = logging.getLogger(__name__)
 

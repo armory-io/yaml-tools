@@ -4,7 +4,7 @@ cd "$(dirname "$0")"/..
 
 set -x
 docker run --rm \
-    -v "$(pwd)/armory:/src/armory" \
+    -v "$(pwd)/yamltools:/src/yamltools" \
     --workdir=/src \
     ${DOCKER_IMAGE} \
     nosetests -v --exclude="integration" ${@:2}

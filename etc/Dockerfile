@@ -1,6 +1,6 @@
 FROM python:3.6
 
-ADD armory/ /home/armory/armory
+ADD yamltools/ /home/armory/yamltools
 ADD setup.py /home/armory
 
 WORKDIR /home/armory

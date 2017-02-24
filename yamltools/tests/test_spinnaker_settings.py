@@ -10,16 +10,17 @@ class TestSpinnaker(unittest.TestCase):
         self.dir_path = os.path.dirname(os.path.realpath(__file__))
         logger.debug("directory is currently: %s", self.dir_path)
 
-    # def test_ordered_loading(self):
-    #     fixtures_dir = "%s/fixtures/profiles" % self.dir_path
-    #     active_profiles= "armory, local".split(",")
-    #     yaml_content = spinnaker.load_ordered_file_paths(active_profiles, fixtures_dir)
-    #     expected_content = [
-    #         {'spinnaker': {'armory': True}}, {'spinnaker': {'local': True}}
-    #     ]
-    #     self.assertEquals(yaml_content, "[1]")
+    def test_missing_profile_doesnt_throw_exception(self):
+        #shouldn't throw an exception if profile doens't exist
+        try:
+            settings = spinnaker.settings(
+                    spinnaker_opt_dir="%s/fixtures" % self.dir_path,
+                    spring_profiles_active="somefakeprofile, armory, local")
+        except Exception as e:
+            logger.exception(e)
+            self.fail("settings() failed unexpectedly")
 
-    def test_default_settings(self):
+    def test_get_settings(self):
         settings = spinnaker.settings(
                     spinnaker_opt_dir="%s/fixtures" % self.dir_path,
                     spring_profiles_active="armory, local")

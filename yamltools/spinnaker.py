@@ -6,6 +6,7 @@ import logging
 import os
 import glob
 import yaml
+import jinja2
 from collections import OrderedDict
 logger = logging.getLogger(__name__)
 
@@ -41,12 +42,30 @@ def settings(spinnaker_opt_dir="/opt/spinnaker/",spring_profiles_active="local")
     resolved_settings = resolver.resolve_yamls(list(loaded_yaml))
     return resolved_settings
 
-def substitute_deck_settings(deck_settings_content, spkr_settings):
-    pass
+def render_deck_settings(deck_settings_txt, spkr_settings):
+    env = jinja2.Environment(
+            variable_start_string="${",
+            variable_end_string="}",
+            undefined=SilentUndefined
+        )
+    template = env.from_string(deck_settings_txt)
+    rendered_template = template.render(spkr_settings)
+    return rendered_template
 
 def deck_configure():
-    spkr_opt_dir = os.environ.get("SPINNAKER_OPT_DIR", spinnaker_opt_dir)
+    spkr_opt_dir = os.environ.get("SPINNAKER_OPT_DIR", "/opt/spinnaker/")
+    deck_dir = os.environ.get("DECK_OPT_DIR", "/opt/deck/html")
+    logger.info("Using spinnaker directory: %s" % spkr_opt_dir)
     settings_path = "%s/config/settings.js" % spkr_opt_dir
+    logger.info("Using settings path: %s" % settings_path)
     deck_settings_content = open(settings_path).read()
     spkr_settings = settings()
-    substitute_deck_settings(deck_settings_content, spkr_settings)
+    rendered_settings = render_deck_settings(deck_settings_content, spkr_settings)
+    logger.info("Writing to file path")
+    settings_js_file = open("%s/settings.js" % deck_dir, "w+")
+    settings_js_file.write(rendered_settings)
+    logger.info("Completed rendering of deck settings")
+
+class SilentUndefined(jinja2.Undefined):
+    def _fail_with_undefined_error(self, *args, **kwargs):
+        return ''

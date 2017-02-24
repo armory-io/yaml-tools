@@ -9,9 +9,7 @@ from collections import OrderedDict
 
 def settings(spinnaker_opt_dir="/opt/spinnaker/",spring_profiles_active="local"):
     #make some assumptions about the environment
-    spkr_opt_dir = os.environ.get(
-                        "SPINNAKER_OPT_DIR",
-                        spinnaker_opt_dir)
+    spkr_opt_dir = os.environ.get("SPINNAKER_OPT_DIR", spinnaker_opt_dir)
     spring_profiles_active = os.environ.get(
                         "SPRING_PROFILES_ACTIVE",
                         spring_profiles_active)
@@ -32,9 +30,12 @@ def settings(spinnaker_opt_dir="/opt/spinnaker/",spring_profiles_active="local")
     resolved_settings = resolver.resolve_yamls(list(loaded_yaml))
     return resolved_settings
 
-def configure_main():
-    settings_file = sys.argv[0]
-    yaml_templates = sys.argv[1:]
+def substitute_deck_settings(deck_settings_content, spkr_settings):
+    pass
 
-def __main__():
-    configure_main()
+def deck_configure():
+    spkr_opt_dir = os.environ.get("SPINNAKER_OPT_DIR", spinnaker_opt_dir)
+    settings_path = "%s/config/settings.js" % spkr_opt_dir
+    deck_settings_content = open(settings_path).read()
+    spkr_settings = settings()
+    substitute_deck_settings(deck_settings_content, spkr_settings)

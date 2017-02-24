@@ -16,7 +16,7 @@ setup(name='yaml-tools',
       ],
       entry_points= {
        "console_scripts": [
-            "lighthouse = armory.lighthouse.routes:run_server"
+            "deck-configure = yamltools.spinnaker:deck_configure"
         ]
       }
 )

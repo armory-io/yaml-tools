@@ -7,6 +7,7 @@ import os
 import glob
 import yaml
 import re
+import json
 from collections import OrderedDict
 logger = logging.getLogger(__name__)
 
@@ -48,7 +49,7 @@ def render_deck_settings(deck_settings_txt, spkr_settings):
     for key in keys_to_resolve:
         rendered_settings = rendered_settings.replace(
                     "${%s}" % key,
-                    str(spkr_settings.get(key, ''))
+                    json.dumps(spkr_settings.get(key, ''))
                 )
     return rendered_settings
 

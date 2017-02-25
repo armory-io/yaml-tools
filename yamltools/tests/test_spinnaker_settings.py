@@ -4,8 +4,8 @@ from yamltools import spinnaker
 import logging
 logger = logging.getLogger(__name__)
 
-settings_js_result = """var gateUrl = 'http://mockurl';
-var authEnabled = '';
+settings_js_result = """var gateUrl = "http://mockurl";
+var authEnabled = false;
 window.spinnakerSettings = {
   gateUrl: gateUrl,
   bakeryDetailUrl: gateUrl + '/bakery/logs/global/{{context.status.id}}',

@@ -12,7 +12,6 @@ setup(name='yaml-tools',
           'pyyaml',
           'nose',
           'flatdict',
-          'jinja2'
       ],
       entry_points= {
        "console_scripts": [

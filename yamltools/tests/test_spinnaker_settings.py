@@ -42,6 +42,7 @@ class TestSpinnaker(unittest.TestCase):
         self.assertEquals(settings_js_result, result)
 
     def test_get_settings(self):
+        os.environ["API_HOST"] = "http://mockapihost.com"
         settings = spinnaker.settings(
                     spinnaker_opt_dir="%s/fixtures" % self.dir_path,
                     spring_profiles_active="armory, local")
@@ -50,3 +51,5 @@ class TestSpinnaker(unittest.TestCase):
         self.assertEquals(settings["spinnaker.armory"], False)
         #make sure spinnakery main got called
         self.assertEquals(settings["spinnaker.default"], True)
+        #make sure that the environment variables are also returned
+        self.assertEquals(settings["API_HOST"], "http://mockapihost.com")

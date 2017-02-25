@@ -4,10 +4,11 @@ import sys
 import logging
 import flatdict
 import collections
+import os
 logger = logging.getLogger(__name__)
 
-def resolve_yamls(yaml_templates):
-    merged_yaml = _merge_dicts(reversed(yaml_templates))
+def resolve_yamls(yaml_templates, environ=os.environ):
+    merged_yaml = _merge_dicts(reversed(yaml_templates + [environ]))
     flattened = flatdict.FlatDict(merged_yaml, delimiter=".")
     keep_resolving = True
     loops = 0

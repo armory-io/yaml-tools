@@ -31,7 +31,8 @@ class TestYaml(unittest.TestCase):
 
         #order matters here
         result = resolver.resolve_yamls(
-                    [armory_yaml, local_yaml, spinnaker_yaml, environ]
+                    [armory_yaml, local_yaml, spinnaker_yaml],
+                    environ=environ
                 )
 
         logger.info(result)

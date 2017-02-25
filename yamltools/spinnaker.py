@@ -48,7 +48,7 @@ def render_deck_settings(deck_settings_txt, spkr_settings):
     for key in keys_to_resolve:
         rendered_settings = rendered_settings.replace(
                     "${%s}" % key,
-                    spkr_settings.get(key, '')
+                    str(spkr_settings.get(key, ''))
                 )
     return rendered_settings
 

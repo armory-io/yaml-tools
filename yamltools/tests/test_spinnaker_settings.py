@@ -33,8 +33,8 @@ class TestSpinnaker(unittest.TestCase):
         settings_js_txt = open(settings_js_path).read()
         settings = {
             'services.deck.gateUrl': 'http://mockurl',
-            'deck.gateUrl': 'http://mockurl',
-            'deck': 'http://mockurl'
+            #make sure the false gets casted correctly
+            'services.deck.auth.enabled': False
         }
 
         result = spinnaker.render_deck_settings(settings_js_txt, settings)

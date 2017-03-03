@@ -19,6 +19,12 @@ def _read_file_safe(file_path):
         logger.warn("This might be okay if you didn't expect that profile to exist")
     return None
 
+__settings_cache = None
+def settings_cache(spinnaker_opt_dir="/opt/spinnaker/",spring_profiles_active="local"):
+    if __settings_cache is None:
+        __settings_cache = settings(spinnaker_opt_dir, spring_profiles_active)
+    return __settings_cache
+
 def settings(spinnaker_opt_dir="/opt/spinnaker/",spring_profiles_active="local"):
     #make some assumptions about the environment
     spkr_opt_dir = os.environ.get("SPINNAKER_OPT_DIR", spinnaker_opt_dir)

@@ -8,6 +8,8 @@ import os
 logger = logging.getLogger(__name__)
 
 def resolve_yamls(yaml_templates, environ=os.environ):
+    logger.debug("Merging following yaml_templates: %s" % yaml_templates)
+    logger.debug("Using environ: %s" % environ)
     merged_yaml = _merge_dicts(reversed(yaml_templates + [environ]))
     flattened = flatdict.FlatDict(merged_yaml, delimiter=".")
     keep_resolving = True

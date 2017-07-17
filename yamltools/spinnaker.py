@@ -26,6 +26,10 @@ def settings_cache(spinnaker_opt_dir="/opt/spinnaker/",spring_profiles_active="l
     return __settings_cache
 
 def settings(spinnaker_opt_dir="/opt/spinnaker/",spring_profiles_active="local"):
+    return named_settings(spinnaker_opt_dir, spring_profiles_active)
+
+def named_settings(spinnaker_opt_dir="/opt/spinnaker/", spring_profiles_active="local",
+        config_name="spinnaker"):
     #make some assumptions about the environment
     spkr_opt_dir = os.environ.get("SPINNAKER_OPT_DIR", spinnaker_opt_dir)
     spring_profiles_active = os.environ.get(
@@ -40,7 +44,7 @@ def settings(spinnaker_opt_dir="/opt/spinnaker/",spring_profiles_active="local")
     #we need to add the default profiles, i.e spinnaker.yml
     profile_suffixes.append("")
     active_yaml_filenames = map(
-                        lambda p: "%s/spinnaker%s.yml" % (spkr_conf_dir, p),
+                        lambda p: "%s/%s%s.yml" % (spkr_conf_dir, config_name, p),
                         profile_suffixes)
 
     yaml_content = map(_read_file_safe, active_yaml_filenames)

@@ -64,3 +64,10 @@ class TestSpinnaker(unittest.TestCase):
         self.assertEquals(settings["spinnaker.default"], True)
         # make sure that the environment variables are also returned
         self.assertEquals(settings["API_HOST"], "http://mockapihost.com")
+
+    def test_get_named_settings(self):
+        settings = spinnaker.named_settings(
+            spinnaker_opt_dir="%s/fixtures" % self.dir_path,
+            spring_profiles_active="armory, local",
+            config_name="gate")
+        self.assertEquals(settings["gate.testvalue"], True)

@@ -57,10 +57,16 @@ def render_deck_settings(deck_settings_txt, spkr_settings):
     keys_to_resolve = re.findall("\$\{(.*?)\}", deck_settings_txt)
     rendered_settings = deck_settings_txt
     for key in keys_to_resolve:
-        rendered_settings = rendered_settings.replace(
-                    "${%s}" % key,
-                    json.dumps(spkr_settings.get(key, ''))
-                )
+        value = spkr_settings.get(key, '')
+        value_is_string = isinstance(value, str)
+
+        if value_is_string and value.lower() == 'false':
+            rendered_settings = rendered_settings.replace("${%s}" % key, "false")
+        elif value_is_string and value.lower() == 'true':
+            rendered_settings = rendered_settings.replace("${%s}" % key, "true")
+        else:
+            rendered_settings = rendered_settings.replace("${%s}" % key, json.dumps(value))
+
     return rendered_settings
 
 def deck_configure():

@@ -6,9 +6,11 @@ logger = logging.getLogger(__name__)
 
 settings_js_result = """var gateUrl = "http://mockurl";
 var authEnabled = false;
+var canaryEnabled = false;
 window.spinnakerSettings = {
   gateUrl: gateUrl,
   bakeryDetailUrl: gateUrl + '/bakery/logs/global/{{context.status.id}}',
+  canaryEnabled: canaryEnabled
 };
 """
 
@@ -45,7 +47,8 @@ class TestSpinnaker(unittest.TestCase):
         settings = {
             'services.deck.gateUrl': 'http://mockurl',
             # make sure the false gets casted correctly
-            'services.deck.auth.enabled': False
+            'services.deck.auth.enabled': False,
+            'services.deck.canary.enabled': "false"
         }
 
         result = spinnaker.render_deck_settings(settings_js_txt, settings)
@@ -57,7 +60,7 @@ class TestSpinnaker(unittest.TestCase):
         settings = spinnaker.settings(
             spinnaker_opt_dir="%s/fixtures" % self.dir_path,
             spring_profiles_active="armory, local")
-        print(settings)
+
         # make sure the key got overwritten by local
         self.assertEquals(settings["spinnaker.armory"], False)
         # make sure spinnakery main got called

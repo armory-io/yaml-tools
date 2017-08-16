@@ -80,3 +80,5 @@ services:
     #bakeryUrl: ${services.deck.baseUrl}/rosco
     auth:
       enabled: true
+    canary:
+      enabled: false

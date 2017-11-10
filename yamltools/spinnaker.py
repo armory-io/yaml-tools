@@ -11,6 +11,7 @@ import json
 from collections import OrderedDict
 logger = logging.getLogger(__name__)
 
+
 def _read_file_safe(file_path):
     try:
         return open(file_path).read()
@@ -19,29 +20,34 @@ def _read_file_safe(file_path):
         logger.warn("This might be okay if you didn't expect that profile to exist")
     return None
 
+
 __settings_cache = None
+
+
 def settings_cache(spinnaker_opt_dir="/opt/spinnaker/",spring_profiles_active="local"):
     if __settings_cache is None:
         __settings_cache = settings(spinnaker_opt_dir, spring_profiles_active)
     return __settings_cache
 
+
 def settings(spinnaker_opt_dir="/opt/spinnaker/",spring_profiles_active="local"):
     return named_settings(spinnaker_opt_dir, spring_profiles_active)
 
+
 def named_settings(spinnaker_opt_dir="/opt/spinnaker/", spring_profiles_active="local",
         config_name="spinnaker"):
-    #make some assumptions about the environment
+    # make some assumptions about the environment
     spkr_opt_dir = os.environ.get("SPINNAKER_OPT_DIR", spinnaker_opt_dir)
     spring_profiles_active = os.environ.get(
                         "SPRING_PROFILES_ACTIVE",
                         spring_profiles_active)
     spkr_conf_dir = "%s/config" % spkr_opt_dir
-    #order them the right way so we overwrite properties properly
+    # order them the right way so we overwrite properties properly
     spring_profiles = reversed(spring_profiles_active.split(","))
-    #remove extra spaces if any
+    # remove extra spaces if any
     profiles_clean = map(lambda p: p.strip(), spring_profiles)
     profile_suffixes = list(map(lambda ps: "-%s" % ps, profiles_clean))
-    #we need to add the default profiles, i.e spinnaker.yml
+    # we need to add the default profiles, i.e spinnaker.yml
     profile_suffixes.append("")
     active_yaml_filenames = map(
                         lambda p: "%s/%s%s.yml" % (spkr_conf_dir, config_name, p),
@@ -52,6 +58,7 @@ def named_settings(spinnaker_opt_dir="/opt/spinnaker/", spring_profiles_active="
     loaded_yaml = map(yaml.load, nonempty_yamls)
     resolved_settings = resolver.resolve_yamls(list(loaded_yaml))
     return resolved_settings
+
 
 def render_deck_settings(deck_settings_txt, spkr_settings):
     keys_to_resolve = re.findall("\$\{(.*?)\}", deck_settings_txt)
@@ -69,16 +76,23 @@ def render_deck_settings(deck_settings_txt, spkr_settings):
 
     return rendered_settings
 
+
 def deck_configure():
     spkr_opt_dir = os.environ.get("SPINNAKER_OPT_DIR", "/opt/spinnaker/")
     deck_dir = os.environ.get("DECK_OPT_DIR", "/opt/deck/html")
-    logger.info("Using spinnaker directory: %s" % spkr_opt_dir)
-    settings_path = "%s/config/settings.js" % spkr_opt_dir
-    logger.info("Using settings path: %s" % settings_path)
+
+    settings_path = "%s/settings-template.js" % deck_dir
+
+    logger.info("Host's Spinnaker config directory: %s" % spkr_opt_dir)
+    logger.info("Path the settings.js template: %s" % settings_path)
+
     deck_settings_content = open(settings_path).read()
     spkr_settings = settings()
     rendered_settings = render_deck_settings(deck_settings_content, spkr_settings)
-    logger.info("Writing to file path")
-    settings_js_file = open("%s/settings.js" % deck_dir, "w+")
+
+    settings_js_rendered="%s/settings.js" % deck_dir
+    logger.info("Writing rendered settings.js to: %s" % settings_js_rendered)
+
+    settings_js_file = open(settings_js_rendered, "w+")
     settings_js_file.write(rendered_settings)
     logger.warn("Completed rendering of deck settings")

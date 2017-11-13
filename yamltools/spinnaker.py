@@ -84,11 +84,11 @@ def deck_configure():
     deck_dir = os.environ.get("DECK_OPT_DIR", "/opt/deck/html")
     spinnaker_config_dir = os.environ.get("SPINNAKER_CONFIG_DIR", "/opt/spinnaker/config")
 
-    settings_path = "%s/settings-template.js" % spinnaker_config_dir
+    settings_template_path = "%s/settings-template.js" % deck_dir
 
-    logger.info("Path the settings.js template: %s" % settings_path)
+    logger.info("Path to settings.js template: %s" % settings_template_path)
 
-    deck_settings_content = open(settings_path).read()
+    deck_settings_content = open(settings_template_path).read()
     spkr_settings = settings(spinnaker_config_dir)
     rendered_settings = render_deck_settings(deck_settings_content, spkr_settings)
 

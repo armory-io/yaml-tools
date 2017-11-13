@@ -70,12 +70,12 @@ def render_deck_settings(deck_settings_txt, spkr_settings):
         elif value == True or (value_is_string and value.lower() == 'true'):
             print("yml true for:", "${%s}" % key)
             rendered_settings = rendered_settings.replace("${%s}" % key, "true")
-        elif value == '':
+        elif value is None or value == '':
             print("yml empty string for:", "${%s}" % key)
             rendered_settings = rendered_settings.replace("${%s}" % key, '')
         else:
-            print("yml value for:", "${%s}" % key, json.dumps(value))
-            rendered_settings = rendered_settings.replace("${%s}" % key, json.dumps(value))
+            print("yml value for:", "${%s}" % key, str(value))
+            rendered_settings = rendered_settings.replace("${%s}" % key, str(value))
 
     return rendered_settings
 

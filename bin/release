@@ -1,7 +1,7 @@
 #!/bin/bash
 BUILD_NUMBER=${BUILD_NUMBER:-0}
 BRANCH_NAME=${BRANCH_NAME:-$GIT_HASH}
-TAG=v0.${BUILD_NUMBER}-${BRANCH_NAME}
+TAG=v1.${BUILD_NUMBER}-${BRANCH_NAME}
 echo "Tagging yaml tools with ${TAG}"
 git tag ${TAG} -m "Automated Build Tagging"
 git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/armory-io/yaml-tools --tags

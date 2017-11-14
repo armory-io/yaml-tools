@@ -6,3 +6,5 @@ ADD setup.py /home/armory
 WORKDIR /home/armory
 
 RUN python3 setup.py install
+
+ENTRYPOINT deck-configure

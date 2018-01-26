@@ -88,13 +88,13 @@ def deck_configure():
 
     logger.info("Path to settings.js template: %s" % settings_template_path)
 
-    deck_settings_content = open(settings_template_path).read()
+    deck_settings_content = open(settings_template_path, encoding="utf-8").read()
     spkr_settings = settings(spinnaker_config_dir)
     rendered_settings = render_deck_settings(deck_settings_content, spkr_settings)
 
     settings_js_rendered = "%s/settings.js" % deck_dir
     logger.info("Writing rendered settings.js to: %s" % settings_js_rendered)
 
-    settings_js_file = open(settings_js_rendered, "w+")
+    settings_js_file = open(settings_js_rendered, "w+", encoding="utf-8")
     settings_js_file.write(rendered_settings)
     logger.warn("Completed rendering of deck settings")

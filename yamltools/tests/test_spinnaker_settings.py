@@ -70,7 +70,7 @@ class TestSpinnaker(unittest.TestCase):
 
     def test_get_named_settings(self):
         settings = spinnaker.named_settings(
-            spinnaker_config_dir="%s/fixtures" % self.dir_path,
+            spinnaker_config_dir="%s/fixtures/config" % self.dir_path,
             spring_profiles_active="armory, local",
             config_name="gate")
         self.assertEquals(settings["gate.testvalue"], True)

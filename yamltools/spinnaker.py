@@ -52,7 +52,7 @@ def named_settings(spinnaker_config_dir="/opt/spinnaker/config", spring_profiles
 
     yaml_content = map(_read_file_safe, active_yaml_filenames)
     nonempty_yamls = filter(lambda f: f is not None, yaml_content)
-    loaded_yaml = map(yaml.load, nonempty_yamls)
+    loaded_yaml = filter(lambda f: f is not None, map(yaml.load, nonempty_yamls))
     resolved_settings = resolver.resolve_yamls(list(loaded_yaml))
     return resolved_settings
 

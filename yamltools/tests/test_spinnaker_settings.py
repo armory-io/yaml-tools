@@ -4,7 +4,7 @@ from yamltools import spinnaker
 import logging
 logger = logging.getLogger(__name__)
 
-settings_js_result = """var gateUrl = "http://mockurl";
+settings_js_result = """var gateUrl = http://mockurl;
 var authEnabled = false;
 var canaryEnabled = false;
 window.spinnakerSettings = {
@@ -25,7 +25,7 @@ class TestSpinnaker(unittest.TestCase):
         # shouldn't throw an exception if profile doens't exist
         try:
             settings = spinnaker.settings(
-                spinnaker_opt_dir="%s/fixtures" % self.dir_path,
+                spinnaker_config_dir="%s/fixtures/config" % self.dir_path,
                 spring_profiles_active="somefakeprofile, armory, local")
         except Exception as e:
             logger.exception(e)
@@ -35,7 +35,7 @@ class TestSpinnaker(unittest.TestCase):
         # shouldn't throw an exception if the yml is empty
         try:
             settings = spinnaker.settings(
-                spinnaker_opt_dir="%s/fixtures/empty-config" % self.dir_path,
+                spinnaker_config_dir="%s/fixtures/empty-config" % self.dir_path,
                 spring_profiles_active="somefakeprofile, armory, local")
         except Exception as e:
             logger.exception(e)
@@ -58,7 +58,7 @@ class TestSpinnaker(unittest.TestCase):
     def test_get_settings(self):
         os.environ["API_HOST"] = "http://mockapihost.com"
         settings = spinnaker.settings(
-            spinnaker_opt_dir="%s/fixtures" % self.dir_path,
+            spinnaker_config_dir="%s/fixtures/config" % self.dir_path,
             spring_profiles_active="armory, local")
 
         # make sure the key got overwritten by local
@@ -70,7 +70,7 @@ class TestSpinnaker(unittest.TestCase):
 
     def test_get_named_settings(self):
         settings = spinnaker.named_settings(
-            spinnaker_opt_dir="%s/fixtures" % self.dir_path,
+            spinnaker_config_dir="%s/fixtures/config" % self.dir_path,
             spring_profiles_active="armory, local",
             config_name="gate")
         self.assertEquals(settings["gate.testvalue"], True)

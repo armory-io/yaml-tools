@@ -10,7 +10,7 @@ if [[ ${DEBUGGER} ]]; then
 fi
 
 DOCKER_IMAGE="armory/yamltools:unit"
-docker build -f Dockerfile -t ${DOCKER_IMAGE} .
+docker build -f etc/Dockerfile.unittest -t ${DOCKER_IMAGE} .
 docker run ${INTERACTIVE} --rm \
     -v "$(pwd)/yamltools:/src/yamltools" \
     --workdir=/src \
